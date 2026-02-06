@@ -1,0 +1,96 @@
+﻿@model LocalizationProject.Models.PaymentByLinkModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = "Payment By Link";
+}
+
+<!-- Include Bootstrap Datepicker CSS (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
+
+<div class="card">
+    <form asp-action="QuickCreate" method="post" class="card-body">
+        <div class="text-center mb-4">
+            <h1 class="display-6">@Localizer["PaymentByLinkTitle"]</h1>
+            <hr />
+        </div>
+
+        @Html.HiddenFor(x => x.ShopAccountId)
+        @Html.HiddenFor(x => x.MerchantAccountId)
+
+        <div class="row g-3 mt-3">
+            <div class="col-sm-12 col-md-6 mt-0 p-2">
+                <label asp-for="Amount" class="form-label">@Localizer["Amount"] <span style="color:red">*</span></label>
+                <div class="input-group">
+                    <input asp-for="Amount" type="number" step="0.01" min="1.00" class="form-control" placeholder="@Localizer["AmountPlaceholder"]" />
+                </div>
+                <span asp-validation-for="Amount" class="text-danger col-12"></span>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mt-0 p-2">
+                <label asp-for="ReferenceNumber" class="form-label">@Localizer["ReferenceNumber"]</label>
+                <div class="input-group input-group-merge">
+                    <input asp-for="ReferenceNumber" class="form-control" maxlength="25" placeholder="@Localizer["ReferenceNumberPlaceholder"]" />
+                </div>
+                <span asp-validation-for="ReferenceNumber" class="text-danger col-12"></span>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-sm-12 col-md-6 mt-0 p-2">
+                <label class="form-label">@Localizer["URLExpiry"]</label>
+                <div class="d-flex flex-row">
+                    <button type="button" class="btn btn-sm bg_InterPayRed btn-primary me-sm-3 me-1 text-white Day">@Localizer["Day"]</button>
+                    <button type="button" class="btn btn-sm bg_InterPayRed btn-primary me-sm-3 me-1 text-white Week">@Localizer["Week"]</button>
+                    <button type="button" class="btn btn-sm bg_InterPayRed btn-primary me-sm-3 me-1 text-white Month">@Localizer["Month"]</button>
+                    <button type="button" class="btn btn-sm bg_InterPayRed btn-primary me-sm-3 me-1 text-white Custom">@Localizer["Custom"]</button>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6 mt-0 p-2">
+                <label asp-for="URLExpiry" class="form-label">@Localizer["Date"]</label>
+                <input asp-for="URLExpiry" type="text" class="form-control datepicker" placeholder="DD/MM/YYYY" autocomplete="off" />
+                <span asp-validation-for="URLExpiry" class="text-danger col-12"></span>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="ExpiryType" />
+
+        <div class="pt-4">
+            <button type="submit" class="btn btn-danger active text-white me-sm-3 me-1">
+                @Localizer["SubmitButton"]
+            </button>
+            <a type="reset" class="btn btn-primary" href="~/PaymentByLink/Index">
+                @Localizer["CancelButton"]
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Scripts Section -->
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- jQuery & Bootstrap Datepicker JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+
+    <script>
+        // ExpiryType buttons
+        document.querySelectorAll('.Day, .Week, .Month, .Custom').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelector('input[name="ExpiryType"]').value = this.textContent.trim();
+            });
+        });
+
+        // Initialize datepicker
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                todayHighlight: true
+            });
+        });
+    </script>
+}

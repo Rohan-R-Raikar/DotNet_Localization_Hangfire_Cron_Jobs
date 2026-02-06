@@ -1,0 +1,35 @@
+networks:
+  mynetwork:
+
+services:
+  demoappdb:
+    container_name: containerdb
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+        - 8002:1433
+    environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=YourStrong@Pass123
+    networks:
+      - mynetwork
+
+
+  customehangfireclean:
+    container_name: demo-hangfire-app
+    image: ${DOCKER_REGISTRY-}customehangfireclean
+    build:
+      context: .
+      dockerfile: CustomeHangfireClean/Dockerfile
+    ports:
+        - 8080:8080
+    depends_on:
+        - demoappdb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DB_HOST=demoappdb
+      - DB_NAME=DemoHangfireApp
+      - DB_USER=sa
+      - DB_PASS=YourStrong@Pass123
+      - ConnectionStrings__DefaultConnection=Server=demoappdb;Database=DemoHangfireApp;User Id=sa;Password=YourStrong@Pass123;TrustServerCertificate=True;Encrypt=False;
+    networks:
+      - mynetwork
