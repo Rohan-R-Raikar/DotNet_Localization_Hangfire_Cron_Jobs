@@ -1,0 +1,6 @@
+@HangfireCronDotNet9_HostAddress = http://localhost:5056
+
+GET {{HangfireCronDotNet9_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
